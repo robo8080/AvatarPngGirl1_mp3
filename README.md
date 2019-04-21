@@ -13,7 +13,8 @@ mp3ファイル再生は、M5Stack Libraryのexample"PlayMP3FromSDToDAC"をベ�
 * Arduino IDE (1.8.5で動作確認をしました。)<br>
 * [Arduino core for the ESP32](https://github.com/espressif/arduino-esp32 "Title")
 * [M5Stack Library](https://github.com/m5stack/M5Stack.git "Title")
-* [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio/ "Title")<br><br>
+* [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio/ "Title")
+* [M5Stack-SD-Updater](https://github.com/tobozo/M5Stack-SD-Updater/ "Title")<br><br>
 
 ### ESP8266Audioライブラリの修正 ###
 * "AudioOutputI2S.h"に下図赤枠部分を追加します。
