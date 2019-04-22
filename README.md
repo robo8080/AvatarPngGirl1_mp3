@@ -24,7 +24,7 @@ mp3ファイル再生は、M5Stack Libraryのexample"PlayMP3FromSDToDAC"をベ�
 ![画像3](images/image3.png)<br><br><br>
 
 ### 操作方法 ###
-1. SDカードに"test.mp3"というファイル名で、mp3ファイルを入れておきます。
-2. M5StackのBボタンで再生開始します。
+1. SDカードに"/mp3"というディレクトリを作り、mp3ファイルを入れておきます。
+2. M5StackのBボタンでmp3ファイル選択＆再生開始します。
 3. M5StackのCボタンで再生停止します。
 <br><br><br>

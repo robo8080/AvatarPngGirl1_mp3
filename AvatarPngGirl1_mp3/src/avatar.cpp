@@ -114,6 +114,8 @@ void Avatar::setExpression()
 void Avatar::init()
 {
   // TODO: start animation loop
+  M5.Lcd.drawJpg(avatar_bg_jpg, 0); // jpg_len is not used.
+  draw();
 }
 
 /**
