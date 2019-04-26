@@ -1,6 +1,8 @@
 #include <M5Stack.h>
 #include <WiFi.h>
 #include <M5StackUpdater.h>
+#include <M5TreeView.h>
+#include <MenuItemSD.h>
 #include "src/avatar.h"
 #include "src/eye.h"
 #include "AudioFileSourceSD.h"
@@ -17,13 +19,6 @@ Avatar *avatar;
 Eye *eye;
 TaskHandle_t taskHandle1;
 TaskHandle_t taskHandle2;
-
-
-String PlayFileName = "";
-String DisplayFileName = "";
-int selectNum;
-String fileName[255];
-int fileNum = 0;
 
 void drawLoop(void *args)
 {
@@ -132,7 +127,7 @@ void loop()
     vTaskSuspend(taskHandle1);
     vTaskSuspend(taskHandle2);
     delay(500);
-    scanDataFolder();
+    String PlayFileName = fileSelect();
     avatar->init();
     delay(100);
     vTaskResume(taskHandle1);
@@ -157,80 +152,17 @@ void loop()
   
 }
 
-void scanDataFolder() {
-   File file;
-   int i = 0;
-   boolean exitMenu = false;
-
-  Serial.println("scanDataFolder");
-
-//  if(!SPIFFS.begin(true)){
-//    M5.Lcd.println("SPIFFS Mount Failed");
-//    Serial.println("SPIFFS Mount Failed");
-//  } else {
-    M5.Lcd.println("Scan data folder");
-    Serial.println("Scan data folder");
-    File root = SD.open("/mp3");
-    if(!root){
-      M5.Lcd.println("Failed to open directory");
-    } else {
-      M5.Lcd.println("Scan: " + (String)root.name());
-      if(!root.isDirectory()){
-        M5.Lcd.println("Not a directory");
-      } else {
-        while(i < 256) {
-          file = root.openNextFile();
-          if(!file){
-//            M5.Lcd.println("Total " + (String)i + " files");
-            fileNum = i;
-            i = 256;
-          } else {
-            fileName[i] = file.name();
-//            M5.Lcd.println(fileName[i]);
-          }
-          i++;
-        }
-      }
-      M5.Lcd.fillScreen(BLACK);
-      M5.Lcd.setCursor(0, 0);
-      M5.Lcd.println("*** File List ***");
-
-      selectNum = 0;
-      listFolder();
-
-      while (!exitMenu){
-        if(digitalRead(BUTTON_A_PIN) == 0) {
-          if( selectNum > 0){
-            selectNum--;
-            listFolder();
-          }
-        }
-        if(digitalRead(BUTTON_C_PIN) == 0) {
-          if( selectNum < fileNum -1){
-            selectNum++; 
-            listFolder();
-          }
-        }
-        if(digitalRead(BUTTON_B_PIN) == 0) {
-          exitMenu = true;
-        }
-        delay(100);
-      }
-
-      PlayFileName = fileName[selectNum];
-    }
-//  }
-}
-
-void listFolder() {
-  M5.Lcd.setCursor(0, 30);
-  for(int i = 0; i < fileNum;  i++){
-    if(i == selectNum){
-      M5.Lcd.println("> " + fileName[i]);
-    } else {
-      M5.Lcd.println("  " + fileName[i]);
+String fileSelect()
+{
+  M5.Lcd.fillScreen(0);
+  M5TreeView treeView;
+  treeView.addItem( new MenuItemSD("SD", "/mp3", true) );
+  treeView.begin();
+  for (;;) {
+    MenuItemFS* mi = (MenuItemFS*)treeView.update();
+    if ((mi != NULL) && (!mi->isDir) && (mi->path.length())) {
+      return mi->path;
     }
   }
 }
-
 
