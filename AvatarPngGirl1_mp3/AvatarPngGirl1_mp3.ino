@@ -156,6 +156,10 @@ String fileSelect()
 {
   M5.Lcd.fillScreen(0);
   M5TreeView treeView;
+  treeView.clientRect.x = 2;
+  treeView.clientRect.y = 2;
+  treeView.clientRect.w = 316;
+  treeView.clientRect.h = 216;
   treeView.addItem( new MenuItemSD("SD", "/mp3", true) );
   treeView.begin();
   for (;;) {
