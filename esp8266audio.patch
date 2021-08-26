@@ -1,0 +1,45 @@
+diff --git a/src/AudioOutputI2S.cpp b/src/AudioOutputI2S.cpp
+index cec3abe..15fd35e 100644
+--- a/src/AudioOutputI2S.cpp
++++ b/src/AudioOutputI2S.cpp
+@@ -26,6 +26,8 @@
+ #endif
+ #include "AudioOutputI2S.h"
+ 
++int aout_level = 0;
++
+ #if defined(ESP32) || defined(ESP8266)
+ AudioOutputI2S::AudioOutputI2S(int port, int output_mode, int dma_buf_count, int use_apll)
+ {
+@@ -239,6 +241,11 @@ bool AudioOutputI2S::begin(bool txDAC)
+   return true;
+ }
+ 
++int AudioOutputI2S::getLevel()
++{
++  return aout_level;
++}
++
+ bool AudioOutputI2S::ConsumeSample(int16_t sample[2])
+ {
+ 
+@@ -254,6 +261,7 @@ bool AudioOutputI2S::ConsumeSample(int16_t sample[2])
+ 
+   if (this->mono) {
+     // Average the two samples and overwrite
++    aout_level = (int)sample[RIGHTCHANNEL];
+     int32_t ttl = ms[LEFTCHANNEL] + ms[RIGHTCHANNEL];
+     ms[LEFTCHANNEL] = ms[RIGHTCHANNEL] = (ttl>>1) & 0xffff;
+   }
+diff --git a/src/AudioOutputI2S.h b/src/AudioOutputI2S.h
+index 90370dc..ab819a3 100644
+--- a/src/AudioOutputI2S.h
++++ b/src/AudioOutputI2S.h
+@@ -44,6 +44,7 @@ class AudioOutputI2S : public AudioOutput
+     
+     bool begin(bool txDAC);
+     bool SetOutputModeMono(bool mono);  // Force mono output no matter the input
++    int getLevel();
+ 
+   protected:
+     bool SetPinout();
